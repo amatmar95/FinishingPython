@@ -60,31 +60,65 @@ def ciudades_ordenadas_por_temperatura(diccionario):
 def guardar_resultados(resultados):
     with open('resultados.json', 'w') as f:
         json.dump(resultados, f)
-   
+
+#Retrieve all the documents
+def retrieveAllDocuments(col):
+    #asyncronia y multihilo
+    result=col.find({}).limit(200)
+    for i in result:
+        print(i)
+
+def actualizarCiudades():
+    antiguaCiudad = set(input("Escriba el nombre de la ciudad que quiere cambiar: "))
+    nuevaCiudad = set(input("Escriba el nombre de la nueva ciudad: "))
+    for i in NombreCiudades:
+        if NombreCiudades[i] == antiguaCiudad:
+            NombreCiudades[i] = nuevaCiudad
+    return NombreCiudades
+
+def borrarCiudad():
+    ciudad= set(input("Introduzca la ciudad que quiere borrar: "))
+    for i in NombreCiudades:
+        if NombreCiudades[i] == ciudad:
+            del NombreCiudades[i]
+    return NombreCiudades
+
+def dropColection(col):  
+    col.drop()
+
 if __name__ == '__main__':
+
+    clientDB = connectdb()
+    db = CreateDB("ciudades_temperaturas", clientDB)
+    col = db["ciudades"]
+
     while True:
         if platform.system() == "Darwin":
             os.system("clear")
         elif platform.system() == "Linux":
             os.system("clear")        
         
-        
-        print("\n1. Generar diccionario aleatorio y guardar en disco.\n2. Cargar diccionario del disco.\n3. \n4. \n5. \n6. \n7.")
+
+        print("\nEstas son las opciones: \n1. Conectar con MongoDB \n2. Crear base de datos \n3. Generar diccionario aleatorio y guardar en disco.\n4. Cargar diccionario del disco.\n5. La ciudad más calurosa \n6. La ciudad más fría \n7. Ciudades ordenadas por temperatura \n8. Crear y guardar un archivo JSON\n9. Actualizar el nombre de una ciudad \n10. Borrar una ciudad de la lista \n11. Recuperar toda la información \n12. Borrar la colección \n13. Salir")
         opcion = input("Seleccione una opción:")
         if opcion == "1":
+            clientDB=connectdb()
+        elif opcion == "2":
+            db=CreateDB('ciudades_temperaturas',clientDB)
+        elif opcion == "3":
             diccionario = generar_diccionario()
             guardar_diccionario(diccionario)
-        elif opcion == "2":
-            diccionario = cargar_diccionario()
-        elif opcion == "3":
-            print(f"Las ciudades más calurosas son: {ciudades_mas_calurosas(diccionario)}")
         elif opcion == "4":
-            print(f"Las ciudades más frías son: {ciudades_mas_frias(diccionario)}")
+            diccionario = cargar_diccionario()
         elif opcion == "5":
+            print(f"La ciudad más calurosa es: {ciudades_mas_calurosas(diccionario)}")
+        elif opcion == "6":
+            print(f"La ciudad más fría es: {ciudades_mas_frias(diccionario)}")
+        elif opcion == "7":
             print("Ciudades ordenadas por temperatura:")
             for ciudad, temperatura in ciudades_ordenadas_por_temperatura(diccionario):
                 print(f"{ciudad}: {temperatura}")
-        elif opcion == "6":
+        elif opcion == "8":
             opcion = input("Desea guardar los resultados en un archivo json? (S/N): ")
             if opcion.upper() == "S":
                 resultados = {
@@ -93,7 +127,16 @@ if __name__ == '__main__':
                     "ciudades_ordenadas_por_temperatura": ciudades_ordenadas_por_temperatura(diccionario)
                 }   
                 guardar_resultados(resultados)
-        elif opcion == "7":
+        elif opcion =="9":        
+            actualizarCiudades()
+        elif opcion == "10":
+            borrarCiudad()
+        elif opcion == "11":        
+            retrieveAllDocuments(col)
+        elif opcion == "12":
+            dropColection(col)
+        elif opcion == "13":
             break
         else:
             print("Opción inválida.")
+        follow=input("Press any key to continue...")
