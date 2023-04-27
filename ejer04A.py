@@ -1,16 +1,29 @@
 import json
 from random import randint
-import pymongo
+from pymongo.mongo_client import MongoClient
 import os
 import platform
 
-NombreCiudades = {"Madrid","Barcelona","Sevilla","Malaga","Cordoba","Toledo","Valencia","Bilbao","Salamanca","Palma","Caceres","Segovia","Saragoça ","Cuenca","Alicante","Las Palmas","Avila","Merida","Granada","Murcia"}
-
-client = pymongo.MongoClient("mongodb://localhost:27017/")
+NombreCiudades = {"Madrid","Barcelona","Sevilla","Malaga","Cordoba","Toledo","Valencia","Bilbao","Salamanca","Palma","Caceres","Segovia","Zaragoza","Cuenca","Alicante","Las Palmas","Avila","Merida","Granada","Murcia"}
 
 # Create a new database and collection
-db = client["temperaturas"]
-col = db["ciudades"]
+
+
+def connectdb():
+    clientDB = MongoClient('mongodb://localhost:27017/')
+    db = clientDB.admin
+    resultado = db.command('serverStatus')
+    print('Host:',resultado['host'])
+    print('Version:',resultado['version'])
+    print('Process:',resultado['process'])
+    print(clientDB.list_database_names())
+    return clientDB
+
+#Create a database
+def CreateDB(name,clientDb):
+    database_name=name
+    db=clientDb[database_name]
+    return db
 
 def generar_diccionario():
     for i in NombreCiudades:
@@ -47,16 +60,17 @@ def ciudades_ordenadas_por_temperatura(diccionario):
 def guardar_resultados(resultados):
     with open('resultados.json', 'w') as f:
         json.dump(resultados, f)
-
-def main():
+   
+if __name__ == '__main__':
     while True:
-        if platform.system() == "Windows":
-            os.system("cls")
-        elif platform.system() == "Darwin":
+        if platform.system() == "Darwin":
             os.system("clear")
         elif platform.system() == "Linux":
             os.system("clear")        
-        opcion = input("Seleccione una opción:\n1. Generar diccionario aleatorio y guardar en disco.\n2. Cargar diccionario del disco.\n3. \n4. \n5. \n6. \n7.")
+        
+        
+        print("\n1. Generar diccionario aleatorio y guardar en disco.\n2. Cargar diccionario del disco.\n3. \n4. \n5. \n6. \n7.")
+        opcion = input("Seleccione una opción:")
         if opcion == "1":
             diccionario = generar_diccionario()
             guardar_diccionario(diccionario)
@@ -83,6 +97,3 @@ def main():
             break
         else:
             print("Opción inválida.")
-            return
-    if __name__ == '__main__':
-        main()
