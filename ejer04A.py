@@ -20,9 +20,9 @@ def connectdb():
     return clientDB
 
 #Create a database
-def CreateDB(name,clientDb):
+def CreateDB(name,clientDB):
     database_name=name
-    db=clientDb[database_name]
+    db=clientDB[database_name]
     return db
 
 def generar_diccionario():
@@ -68,19 +68,35 @@ def retrieveAllDocuments(col):
     for i in result:
         print(i)
 
+# def actualizarCiudades():
+#     antiguaCiudad = input("Escriba el nombre de la ciudad que quiere cambiar: ")
+#     nuevaCiudad = input("Escriba el nombre de la nueva ciudad: ")
+#     for i in NombreCiudades:
+#         if NombreCiudades[i] == antiguaCiudad:
+#             NombreCiudades[i] = nuevaCiudad
+#     return list(NombreCiudades)
+
+# def borrarCiudad():
+#     ciudad= set(input("Introduzca la ciudad que quiere borrar: "))
+#     for i in NombreCiudades:
+#         if NombreCiudades[i] == ciudad:
+#             del NombreCiudades[i]
+#     return NombreCiudades
+
 def actualizarCiudades():
-    antiguaCiudad = set(input("Escriba el nombre de la ciudad que quiere cambiar: "))
-    nuevaCiudad = set(input("Escriba el nombre de la nueva ciudad: "))
+    antiguaCiudad = input("Escriba el nombre de la ciudad que quiere cambiar: ")
+    nuevaCiudad = input("Escriba el nombre de la nueva ciudad: ")
     for i in NombreCiudades:
-        if NombreCiudades[i] == antiguaCiudad:
-            NombreCiudades[i] = nuevaCiudad
+        if i == antiguaCiudad:
+            NombreCiudades.remove(i)
+            NombreCiudades.add(nuevaCiudad)
     return NombreCiudades
 
 def borrarCiudad():
-    ciudad= set(input("Introduzca la ciudad que quiere borrar: "))
+    ciudad = input("Introduzca la ciudad que quiere borrar: ")
     for i in NombreCiudades:
-        if NombreCiudades[i] == ciudad:
-            del NombreCiudades[i]
+        if i == ciudad:
+            NombreCiudades.remove(i)         
     return NombreCiudades
 
 def dropColection(col):  
