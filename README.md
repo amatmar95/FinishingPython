@@ -4,6 +4,7 @@ Este es un repositorio con ejercicios sobre Bases de datos y Flask en Python
 # ¿Quienes colaboran en este repositorio?
 
 ·Cristian Miron
+
 ·Álvaro Mateos
 
 # ¿Cuáles son las configuraciones locales requeridas?
