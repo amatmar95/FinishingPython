@@ -1,11 +1,12 @@
 # FinishingPython
 Este es un repositorio con ejercicios sobre Bases de datos y Flask en Python
 
-#¿Quienes colaboran en este repositorio?
+# ¿Quienes colaboran en este repositorio?
+
 ·Cristian Miron
 ·Álvaro Mateos
 
-#¿Cuáles son las configuraciones locales requeridas?
+# ¿Cuáles son las configuraciones locales requeridas?
 1.Clonar el repositorio
 https://github.com/
 
@@ -18,5 +19,5 @@ Desde Visual Studio Code, presionamos Ctrl+S+P para abrir la paleta, donde escri
 4.Ejecución del programa
 Ejecutar el comando py main.py
 
-#¿Qué contiene este repositorio?
+# ¿Qué contiene este repositorio?
 Este repositorio contiene 
