@@ -1,174 +1,175 @@
-from flask import Flask
+import math
+from Flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
 @app.route('/')
+def home():
+    return '''
+        <h1>Welcome to the exercises!</h1>
+        <p>Choose an exercise:</p>
+        <ul>
+            <li><a href="/bisiesto">Bisiesto</a></li>
+            <li><a href="/par-impar">Par o Impar</a></li>
+            <li><a href="/area-volumen">Area y Volumen</a></li>
+            <li><a href="/Salario">Salario</a></li>
+            <li><a href="/celsius_to_fahrenheit">Fahrenheit</a></li>
+            <li><a href="/circulo">Circulo</a></li>
+        </ul>
+    '''
 
-def index():
-    return """
-    <!doctype html>
-    <html>
-    <head>
-    <title>Ejercicios con Flask</title>
-    </head>
-     <body>
-    <h1>Bienvenido al menú de ejercicios de algoritmos</h1>
-    <p>Seleccione una opcion: </p>
-    <ul>
-      <li><a href="/Ejercicio2">Ejercicio 2</a></li>
-      <li><a href="/ejercicio2">Ejercicio 2</a></li>
-      <li><a href="/ejercicio3">Ejercicio 3</a></li>
-      <li><a href="/ejercicio4">Ejercicio 4</a></li>
-      <li><a href="/ejercicio5">Ejercicio 5</a></li>
-      <li><a href="/ejercicio6">Ejercicio 6</a></li>
-    </ul>
-  </body>
-</html>
-"""
+def bisiesto(n):
+    if n % 4 != 0:
+        resultado = False
+    elif n % 100 != 0:
+        resultado = True
+    elif n % 400 != 0:
+        resultado = False
+    else:
+        resultado = True
+    return resultado
 
-@app.route('/Ejercicio2')
-def Ejercicio2():
-    return """
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <title>Calcular salario</title>
-    </head>
-    <body>
-        <h1>Calculadora salario</h1>
-        <form method="post" action="/validar">
-            <label for="salariobase">Salario base: </label>
-            <input type="number" name="salariobase" id="salariobase">
-            <br>
-            <label for="pagasextras">Pagas extras: </label>
-            <input type="number" name="pagasextras" id="pagasextras">
-            <br>
-            <label for="complementos">Complementos: </label>
-            <input type="number" name="complementos" id="complementos">
-            <br>
-            <label for="otrosconceptos">Otros conceptos retributivos: </label>
-            <input type="number" name="otrosconceptos" id="otrosconceptos">
-            <br>
-            <label for="irpf">Irpf: </label>
-            <input type="number" name="irpf" id="irpf">
-            <br>
-            <label for="seguridadsocial">Seguridad social: </label>
-            <input type="number" name="seguridadsocial" id="seguridadsocial">
-            <br>
-            <input type="submit" value="Calcular">
-        </form>
-    </body>
-    </html>
-    """
+@app.route('/bisiesto', methods=['GET', 'POST'])
+def bisiesto_endpoint():
+    if request.method == 'POST':
+        ano = int(request.form['ano'])
+        resultado = bisiesto(ano)
+        return jsonify({'resultado': resultado})
+    else:
+        return '''
+            <form method="post">
+                <label for="ano">Ingrese un año:</label>
+                <input type="number" id="ano" name="ano" required>
+                <button type="submit">Enviar</button>
+            </form>
+        '''
 
-    @app.route('/validar', methods=['POST'])
-    def validar():
-        salarioBase= request.form["salariobase"]
-        pagasExtras= request.form["pagasextras"]
-        complementos= request.form["complementos"]
-        otrosConceptosRetributivos= request.form["otrosconceptos"]
-        irpf= request.form["irpf"]
-        seguridadSocial= request.form["seguridadsocial"]
-        resultado=Salario.Salario(salarioBase,pagasExtras,complementos,otrosConceptosRetributivos,irpf,seguridadSocial)
-        return f"""
-    <!DOCTYPE html>
-        <html>
-        <head>
-            <title>Calculadora salario bruto y neto</title>
-        </head>
-        <body>
-            <h1>Salario calculado</h1>
-            <p>{resultado}</p>
-        </body>
-        </html>
-            """
+def par_impar(n):
+    if n % 2 == 0:
+        resultado = ("El numero es par")
+    else:
+        resultado = ("El numero es impar")
+    return resultado
 
-if __name__ == "__main__":
-     app.run()
+@app.route('/par-impar', methods=['GET', 'POST'])
+def par_impar_endpoint():
+    if request.method == 'POST':
+        numero = int(request.form['numero'])
+        resultado = par_impar(numero)
+        return jsonify({'resultado': resultado})
+    else:
+        return '''
+            <form method="post">
+                <label for="numero">Ingrese un número:</label>
+                <input type="number" id="numero" name="numero" required>
+                <button type="submit">Enviar</button>
+            </form>
+        '''
 
+def calcular_area_volumen(lado):
+    area = 6 * lado * lado
+    volumen = lado * lado * lado
+    return area, volumen
 
+@app.route('/area-volumen', methods=['GET', 'POST'])
+def area_volumen_endpoint():
+    if request.method == 'POST':
+        lado = float(request.form['lado'])
+        area, volumen = calcular_area_volumen(lado)
+        return jsonify({'area': area, 'volumen': volumen})
+    else:
+        return '''
+            <form method="post">
+                <label for="lado">Ingrese la longitud de un lado:</label>
+                <input type="number" step="any" id="lado" name="lado" required>
+                <button type="submit">Calcular</button>
+            </form>
+        '''
 
+def Salario(salarioBase, pagasExtras, complementos, otrosConceptosRetributivos, irpf, seguridadSocial):
+    salarioBase = float(salarioBase)
+    pagasExtras = float(pagasExtras)
+    complementos = float(complementos)
+    otrosConceptosRetributivos = float(otrosConceptosRetributivos)
+    irpf = float(irpf) / 100
+    seguridadSocial = float(seguridadSocial) / 100
 
+    salarioBruto = salarioBase + pagasExtras + complementos + otrosConceptosRetributivos
+    deducciones = (irpf * salarioBruto) + (seguridadSocial * salarioBruto)
+    deducciones = float(deducciones)
+    salarioNeto = salarioBruto - deducciones
 
+    return salarioBruto, salarioNeto
 
+@app.route('/Salario', methods=['GET', 'POST'])
+def salario_endpoint():
+    if request.method == 'POST':
+        salarioBase = request.form['salarioBase']
+        pagasExtras = request.form['pagasExtras']
+        complementos = request.form['complementos']
+        otrosConceptosRetributivos = request.form['otrosConceptosRetributivos']
+        irpf = request.form['irpf']
+        seguridadSocial = request.form['seguridadSocial']
+        resultado = Salario(salarioBase, pagasExtras, complementos, otrosConceptosRetributivos, irpf, seguridadSocial)
+        return jsonify({'resultado': resultado})
+    else:
+        return '''
+            <form method="post">
+                <label for="salarioBase">Salario Base:</label>
+                <input type="number" step="any" id="salarioBase" name="salarioBase" required><br><br>
+                <label for="pagasExtras">Pagas Extras:</label>
+                <input type="number" step="any" id="pagasExtras" name="pagasExtras" required><br><br>
+                <label for="complementos">Complementos:</label>
+                <input type="number" step="any" id="complementos" name="complementos" required><br><br>
+                <label for="otrosConceptosRetributivos">Otros Conceptos Retributivos:</label>
+                <input type="number" step="any" id="otrosConceptosRetributivos" name="otrosConceptosRetributivos" required><br><br>
+                <label for="irpf">IRPF:</label>
+                <input type="number" step="any" id="irpf" name="irpf" required><br><br>
+                <label for="seguridadSocial">Seguridad Social:</label>
+                <input type="number" step="any" id="seguridadSocial" name="seguridadSocial" required><br><br>
+                <button type="submit">Calcular Salario</button>
+            </form>
+        '''
 
+def celsius_to_fahrenheit(celsius):
+    fahrenheit = (celsius * 9/5) + 32
+    return fahrenheit
 
+@app.route('/celsius_to_fahrenheit', methods=['GET', 'POST'])
+def celsius_to_fahrenheit_endpoint():
+    if request.method == 'POST':
+        celsius = float(request.form['celsius'])
+        fahrenheit = celsius_to_fahrenheit(celsius)
+        return jsonify({'fahrenheit': fahrenheit})
+    else:
+        return '''
+            <form method="post">
+                <label for="celsius">Enter temperature in Celsius:</label>
+                <input type="number" step="any" id="celsius" name="celsius" required>
+                <button type="submit">Convert</button>
+            </form>
+        '''
+def circulo(radio):
+    radio = float(radio)
+    area_circulo = radio ** 2 * math.pi
+    perimetro_circulo = radio * 2 * math.pi
+    return jsonify({
+        'area': area_circulo,
+        'perimetro': perimetro_circulo
+    })
 
-
-
-
-
-
-# from flask import Flask,request
-# from Ejercicio2_app import Salario
-
-# app = Flask(__name__)
-
-# @app.route('/')
-# @app.route('/index')
-# def index():
-#     return """
-#     <!DOCTYPE html>
-#     <html>
-#     <head>
-#         <title>Ejercicios con Flask</title>
-#     </head>
-#     <body>
-#         <h1>Seleccione un ejercicio:</h1>
-#             <form method="get" action="/appEj06">
-#                 <input  type="submit" value="Ejercicio 1 - Salario">
-#             </form>
-#             <form method="get" action="/appEj07">
-#                 <input  type="submit" value="Ejercicio 2 - ">
-#             </form>
-#             <form method="get" action="/appEj08">
-#                 <input  type="submit" value="Ejercicio 3 - ">
-#             </form>
-#             <form method="get" action="/appEj11">
-#                 <input  type="submit" value="Ejercicio 4 - ">
-#             </form>
-#             <form method="get" action="/appEj12">
-#                 <input  type="submit" value="Ejercicio 5 - ">
-#             </form>
-#             <form method="get" action="/appEj13">
-#                 <input  type="submit" value="Ejercicio 6 - ">
-#             </form>
-#     </body>
-#     </html>
-#     """
-
-# @app.route('/validar', methods=['POST'])
-# def validar():
-#     salarioBase= request.form["salariobase"]
-#     pagasExtras= request.form["pagasextras"]
-#     complementos= request.form["complementos"]
-#     otrosConceptosRetributivos= request.form["otrosconceptos"]
-#     irpf= request.form["irpf"]
-#     seguridadSocial= request.form["seguridadsocial"]
-#     resultado=Salario.Salario(salarioBase,pagasExtras,complementos,otrosConceptosRetributivos,irpf,seguridadSocial)
-#     return f"""
-# <!DOCTYPE html>
-#     <html>
-#     <head>
-#         <title>Calculadora salario bruto y neto</title>
-#     </head>
-#     <body>
-#         <h1>Salario calculado</h1>
-#         <p>{resultado}</p>
-#     </body>
-#     </html>
-#         """
-# if __name__ == "__main__":
-#     app.run()
-
-
-
-
-
-
-
-
-
-
-
-
+@app.route('/circulo', methods=['GET', 'POST'])
+def circulo_endpoint():
+    if request.method == 'POST':
+        radio = float(request.form['radio'])
+        return circulo(radio)
+    else:
+        return '''
+            <form method="post">
+                <label for="radio">Introduzca el radio del círculo:</label>
+                <input type="number" step="any" id="radio" name="radio" required>
+                <button type="submit">Calcular</button>
+            </form>
+        '''
+if __name__ == '__main__':
+    app.run(debug=True)
