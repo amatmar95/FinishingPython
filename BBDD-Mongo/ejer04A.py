@@ -83,21 +83,14 @@ def retrieveAllDocuments(col):
 #             del NombreCiudades[i]
 #     return NombreCiudades
 
-def actualizarCiudades():
-    antiguaCiudad = input("Escriba el nombre de la ciudad que quiere cambiar: ")
-    nuevaCiudad = input("Escriba el nombre de la nueva ciudad: ")
-    for i in NombreCiudades:
-        if i == antiguaCiudad:
-            NombreCiudades.remove(i)
-            NombreCiudades.add(nuevaCiudad)
-    return NombreCiudades
+def actualizarCiudades(NombreCiudades,antiguaCiudad,nuevaCiudad):
+    NombreCiudades.remove(antiguaCiudad)
+    NombreCiudades.add(nuevaCiudad)
+    print (NombreCiudades)
 
-def borrarCiudad():
-    ciudad = input("Introduzca la ciudad que quiere borrar: ")
-    for i in NombreCiudades:
-        if i == ciudad:
-            NombreCiudades.remove(i)         
-    return NombreCiudades
+def borrarCiudad(ciudad):
+    NombreCiudades.remove(ciudad)         
+    print (NombreCiudades)
 
 def dropColection(col):  
     col.drop()
@@ -143,10 +136,13 @@ if __name__ == '__main__':
                     "ciudades_ordenadas_por_temperatura": ciudades_ordenadas_por_temperatura(diccionario)
                 }   
                 guardar_resultados(resultados)
-        elif opcion =="9":        
-            actualizarCiudades()
+        elif opcion =="9":
+            antiguaCiudad = input("Escriba el nombre de la ciudad que quiere cambiar: ")
+            nuevaCiudad = input("Escriba el nombre de la nueva ciudad: ")          
+            actualizarCiudades(NombreCiudades,antiguaCiudad,nuevaCiudad)
         elif opcion == "10":
-            borrarCiudad()
+            ciudad = input("Introduzca la ciudad que quiere borrar: ")
+            borrarCiudad(ciudad)
         elif opcion == "11":        
             retrieveAllDocuments(col)
         elif opcion == "12":
